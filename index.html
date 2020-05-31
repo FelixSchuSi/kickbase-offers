@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css" integrity="sha384-cg6SkqEOCV1NbJoCu11+bm0NvBRc8IYLRGXkmNrqUBfTjmMYwNKPWBTIKyw9mHNJ" crossorigin="anonymous">
+    <title>kickbase-offers</title>
+</head>
+
+<body>
+    <h1>kickbase-offers</h1>
+    <table class="pure-table pure-table-striped">
+    </table>
+    <script>
+        // Ein Zeitpunkt, an dem es ein Angebot gegeben hat
+        // Wird als Ausgangspunkt für die Berechnung genommen
+        // x sind Millisekunden seit Unix Epoche
+        // 16:17 Uhr
+        const anchor = new Date(1590937169021);
+        const now = new Date();
+        // 50 Minuten in Millisekunden
+        const ITERATION = 1000 * 60 * 50;
+        // anc       ang        ang now     ang
+        // |----------|----------|---|-------|
+        //                       |---|          -> diff%ITERATION
+        //                           |-------|  -> msToNextOffer
+        const diff = now.getTime() - anchor.getTime();
+        const msToNextOffer = ITERATION - (diff % ITERATION);
+        const dateOfNextOffer = new Date(now.getTime() + msToNextOffer);
+
+        function* offerGen() {
+            let offer = dateOfNextOffer;
+            while (true) {
+                offer = new Date(offer.getTime() + ITERATION);
+                yield offer;
+            }
+        }
+        const gen = offerGen();
+        // anchorElement = document.querySelector('.asdf');
+        // anchorElement.innerHTML = anchor;
+
+        createblock();
+        createblock();
+        createblock();
+        createblock();
+        function createblock(content) {
+            let row = document.createElement("tr");
+            let elem = document.createElement("td");
+            row.appendChild(elem);
+            const table = document.querySelector('table');
+            elem.innerHTML = gen.next().value;
+            table.appendChild(row);
+        }
+    </script>
+</body>
+
+</html>
